@@ -16,19 +16,24 @@ diagnosisI
   \item{\dots}{Further generic options for plot function}
 }
 \details{
- plot.diag will draw a very simple nomogram as many examples from wikipedia
+plot.diag will draw a very simple nomogram as many examples from wikipedia
  \url{http://en.wikipedia.org/wiki/Nomogram}. This is not a generic nomogram
  as shown in many evidenced based medicine texts, because this one shows only
- pre-test and post-test variations with a fixed likelihood ratio. This
+ pre-test and post-test variations with a fixed positive likelihood ratio. This
  likelihood is a statistic from an object created by diagnosis or diagnosisI.
- To use it, draw, with a rule, a vertical line from a desired pre-test
- probability, and to find the corresponding post-test probability, draw a
+ It's usage is the same as applying the Bayes theorem where the pre-test odds x
+ positive likelihood ratio equals the pos-test odd (transforming the odds to
+ probabilities). To use it, draw, with a rule, a vertical line from a desired
+ pre-test  probability, and to find the corresponding post-test probability, draw a
  horizontal line from the intersection of the curve and the vertical line.
 }
 
 \references{JA Knotterus, The Evidence Based Clinical Diagnosis; BMJBooks, 2002}
 \author{Pedro Brasil; \email{pedro.brasil@ipec.fiocruz.br}}
-\seealso{\code{\link{diagnosis}},\link[Design]{nomogram}}
+\note{Bug reports, malfunctioning, or suggestions for further improvements can
+ be sent, preferentially, through the epidemiologic R list.
+}
+\seealso{\code{\link{diagnosis}},\link[Design]{nomogram},\link[epiR]{epi.nomogram}}
 \examples{
 #this will draw a ROC curve
 mytest<-diagnosisI(364,22,17,211, print=TRUE, plot=TRUE)

@@ -8,12 +8,12 @@
    test evaluation.
 }
 \usage{
-diagnosis(gold, test1, CL = 0.95, print = TRUE, plot = FALSE)
+diagnosis(gold, test, CL = 0.95, print = TRUE, plot = FALSE)
 diagnosisI(TP,FN,FP,TN, CL = 0.95, print = TRUE, plot = FALSE)
 }
 \arguments{
   \item{gold}{The reference test (gold standard)}
-  \item{test1}{The index test (test under evaluation)}
+  \item{test}{The index test (test under evaluation)}
   \item{TP}{A number representing True Positives from a 2x2 table}
   \item{FN}{A number representing False Negatives from a 2x2 table}
   \item{FP}{A number representing False Positives from a 2x2 table}
@@ -23,7 +23,7 @@ diagnosisI(TP,FN,FP,TN, CL = 0.95, print = TRUE, plot = FALSE)
   \item{plot}{If TRUE, diagnosis will plot a ROC curve of the test under
    evaluation. This plot may later be edited, as any other plot, with title,
    legends etc. Default is FALSE.}
-   \item{CL}{Confidence limits for confidence intervals. Must be a numeric value
+  \item{CL}{Confidence limits for confidence intervals. Must be a numeric value
    between 0 and 1. Default is 0.95.}
 }
 \details{
@@ -38,16 +38,47 @@ FP is false positive and FN is false negative. Sensitivity, Specificity,
 Predictive values and Accuracy confidence limits rely on binomial distribution,
 which does not give result outside [0:1] such as normal distribution or
 asymptotic theory. DOR, Likelihood  ratios and Youden J index confidence limits
-rely on normal approximation (Wald method for likelihoo).
+rely on normal approximation (Wald method for likelihoods). The AUC (area under
+the ROC curve) is estimated by DeLong method (trapezoidal or Mann-Witney mehotd)
+and so is its confidence limits. It is known that AUC by this mehtod, for ordinal
+data, underestimate the true AUC.
 }
 \value{
-  2x2 table, Sample size, Prevalence, Sensitivity, Specificity, Predictive
-  values, Likelihood ratios, Diagnostic odds ratio, Error trade off, Error rate,
-  Accuracy, Area under ROC curve and confidence intervals.
+  A 2x2 table from which the validity measures are calculated.
+  \item{Sample size}{The number of subjects analyzed.}
+  \item{Prevalence}{The proportion classified as with the target condition by the
+        reference standard}
+  \item{Sensitivity}{the probability of the test to correctly classify subjects
+        with the target condition (TP/(TP+FN))}
+  \item{Specificity}{the probability of the test to correctly classify subjects
+        without the target condition (TN/(TN+FP))}
+  \item{Predictive values}{the probabilities of being with (positive predictive
+        value) or without (negative predictive value) the target condition given a test result.}
+  \item{Likelihood ratios}{the probability of test a result in people with the
+       target condition, divided by the probability of the same test result in
+       people without the target condition (PLR = Se/(1-Sp); NLR = (1-Sp)/Se)}
+  \item{Diagnostic odds ratio}{represents the overall discrimination of a
+        dichotomous test, and is equivalent to the ratio of PLR and NLR.}
+  \item{Error trade off}{Is the amount of false positives traded with false negatives
+        for each decision threshold; here expressed as an odd - for binary results
+        there is only one threshold}
+  \item{Error rate}{expresses how many errors we make when we diagnose patients
+        with an abnormal test result as diseased, and those with a normal test result
+        as non-diseased}
+  \item{Accuracy}{overall measure that express the capacity of the test to correctly
+        classify subjects with and without the target condition ((TP+TN)/(sample size))}
+  \item{Area under ROC curve}{overall measure of accuracy - here the method is the
+        trapezoidal (same as Mann-Whitney rank sum test or DeLong method). It gives
+        identical results as (Se+SP)/2.}
   }
-\references{JA Knotterus, The Evidence Based Clinical Diagnosis; BMJBooks, 2002.
-Simel D, Samsa G, Matchar D (1991). Likelihood ratios with confidence: Sample size
-estimation for diagnostic test studies. Journal of Clinical Epidemiology 44: 763 - 770}
+\references{
+  \item{1}{Knotterus. The Evidence Based Clinical Diagnosis; BMJBooks, 2002.}
+  \item{2}{Xiou-Hua Zhou, Nancy A Obuchowsky, Donna McClish. Statistical Mehods
+           in diagnostic Medicine; Wiley, 2002.}
+  \item{3}{Simel D, Samsa G, Matchar D (1991). Likelihood ratios with confidence:
+          Sample size estimation for diagnostic test studies. Journal of Clinical
+          Epidemiology 44: 763 - 770}
+}
 \author{Pedro Brasil - \email{pedro.brasil@ipec.fiocruz.br}}
 \note{Bug reports, malfunctioning, or suggestions for further improvements can
  be sent, preferentially, through the epidemiologic R list.
@@ -55,31 +86,33 @@ estimation for diagnostic test studies. Journal of Clinical Epidemiology 44: 763
 \seealso{\code{\link{plot.diag}}, \link[epicalc]{ROC}, \link[epitools]{binom.conf.int},
  \link[epibasix]{sensSpec},\link[epiR]{epi.tests}}
 \examples{
-# simulating a dataset
-mygold<-c("negative","positive","negative","negative","positive",
-  "negative","positive","negative","negative","positive","negative","positive")
-mytest<-c("negative","negative","negative","positive","positive",
-  "negative","positive","negative","negative","positive","negative","positive")
-center<-rep(1:3,4)
-data<-cbind(mygold,mytest,center)
-for(i in 1:6) {data<-rbind(data,data)}
-data<-as.data.frame(data)
-data[2,2]<-"positive"
-data[12,2]<-"positive"
-#attaching dataset
-attach(data)
-#removing unwanted objects
-rm(mygold,mytest,center)
-# running the function
-test<-diagnosis(mygold,mytest,print=FALSE)
+# Simulating a dataset
+mydata<-as.data.frame(rbind(c("positive","positive"),c("positive","negative"),
+        c("negative","positive"),c("negative","negative")))
+# Auxiliary vector to indicate the number of times to expand the lines
+Freq<-as.numeric(c(173,13,27,638))
+# Binding the dataset to the auxiliary vector
+mydata<-as.data.frame(cbind(mydata,Freq))
+# Naming the columns of the data set
+colnames(mydata)<-c("Gold","mytest","Freq")
+# A little discription of the data set to check if it is ok!
+str(mydata)
+# Removing unwanted objects
+rm(Freq)
+# Exapanding the four lines dataset to an adequate format
+mydata<-expand(mydata, index.var = "Freq")
+# Attaching the data set
+attach(mydata)
+# Runing the diagnosis analysis
+test<-diagnosis(Gold,mytest,print=FALSE)
 print(test)
 # the same as
-diagnosis(mygold,mytest)
+diagnosis(Gold,mytest)
 # draw a nomogram from this test
-test<-diagnosis(mygold,mytest,print=FALSE)
+test<-diagnosis(Gold,mytest,print=FALSE)
 plot(test)
 #different from - draw a ROC curve from this test
-diagnosis(mygold,mytest,plot=TRUE,print=FALSE)
+diagnosis(Gold,mytest,plot=TRUE,print=FALSE)
 #inserting values from a 2x2 table
 diagnosisI(364,22,17,211)
 }

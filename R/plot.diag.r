@@ -22,5 +22,6 @@ plot.diag<-function(x,print=FALSE,...){
   #if(error.rate==T)
   #  lines(error.rate,lty=2,col=2)
   grid()
+  axis(3)
   legend("bottomright",legend=paste("Positive likelihood ratio: ",formatC(x$PLR, digits=4)))
 }

@@ -1,16 +1,15 @@
-diagnosis <- function(gold,test1,CL=0.95,print=TRUE,plot=FALSE){
+diagnosis <- function(gold,test,CL=0.95,print=TRUE,plot=FALSE){
   #require(epitools)
   #require(epicalc)
   # to do ...
-  #insert confidence intervals for AUC
   # by option (multicenter)
   # test with 3 categories (indeterminate results)
   #   testef <- as.factor(teste)
-  #   if(nlevels(testef)  2)
+  #   if(nlevels(teste)  2)
   #                  {
                      # analysis this way
   #                   }
-  tab<-table(test1,gold,dnn=c(deparse(substitute(test1)),deparse(substitute(gold))))
+  tab<-table(test,gold,dnn=c(deparse(substitute(test)),deparse(substitute(gold))))
   dimnames(tab) <- list(test = c("negative" , "positive"), gold.standard = c("negative","positive"))
   tabmarg<-addmargins(tab)
   Conf.limit<-CL
@@ -68,6 +67,7 @@ diagnosis <- function(gold,test1,CL=0.95,print=TRUE,plot=FALSE){
   if(plot==FALSE)
     {ROC<-roc.from.table(tab, graph = FALSE)}
   AUC<-ROC$auc
+  # gives same results as AUC<-(Se+Sp)/2
   Youden<-Se+Sp-1
   Youden.inf.cl<-Youden-qnorm(CL/2)*sqrt(((Se * (1 - Se))/(TP+FN) +
            ((Sp * (1 - Sp))/(TN+FP))))

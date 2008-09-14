@@ -37,11 +37,11 @@ Specificity changes.
 \note{Bug reports, malfunctioning, or suggestions for further improvements can
  be sent, preferentially, through the epidemiologic R list.
 }
-\seealso{\code{\link{diagnosis}},\link[epicalc]{ROC},\link[TeachingDemos]{roc.demo}}
+\seealso{\code{\link{diagnosis}},\code{\link{ROC}},\link[epicalc]{ROC},\link[TeachingDemos]{roc.demo}}
 \examples{
-\dontrun{rocdata<-read.table(file="rocdata.txt",header=TRUE)
+data(rocdata)
 attach(rocdata)
-function(Gold,test)}
+interact.ROC(Gold,test2)
 }
 \keyword{dynamic}
 \keyword{iplot}
