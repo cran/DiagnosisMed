@@ -15,7 +15,7 @@ ROC<-function(gold,
   }
   # Sample size
   sample.size<-sum(test.table)
-  # Sample prevalnece, replace by pop prevalence if adequate
+  # Sample prevalence, replace by pop prevalence if adequate
   sample.prevalence<-(sum(test.table[,2])/sample.size)
   if (Prevalence==0){
     pop.prevalence<-sample.prevalence
@@ -213,6 +213,7 @@ ROC<-function(gold,
       {points(1-test.diag.table$Specificity[which.max(test.cutoff.table$Accuracy)],
          test.diag.table$Sensitivity[which.max(test.cutoff.table$Accuracy)],
          col=1,pch=19)
+      title(sub="Cut-off estimated by maximazing accuracy")   
       legend("bottomright",legend=(c(
          paste("cut off:",formatC(test.cutoff.table$test.values[which.max
             (test.cutoff.table$Accuracy)],digits=4)),
@@ -226,6 +227,7 @@ ROC<-function(gold,
       {points(1-test.diag.table$Specificity[which.max(test.cutoff.table$DOR)],
          test.diag.table$Sensitivity[which.max(test.cutoff.table$DOR)],
          col=1,pch=19)
+       title(sub="Cut-off estimated by maximazing diagnostic odds ratio")  
        legend("bottomright",legend=(c(
          paste("cut off:",formatC(test.cutoff.table$test.values[which.max
             (test.cutoff.table$DOR)],digits=4)),
@@ -239,6 +241,7 @@ ROC<-function(gold,
       {points(1-test.diag.table$Specificity[which.min(test.cutoff.table$Error.rate)],
          test.diag.table$Sensitivity[which.min(test.cutoff.table$Error.rate)],
          col=1,pch=19)
+       title(sub="Cut-off estimated by minimizing error rate")  
        legend("bottomright",legend=(c(
          paste("cut off:",formatC(test.cutoff.table$test.values[which.min
             (test.cutoff.table$Error.rate)],digits=4)),
@@ -252,6 +255,7 @@ ROC<-function(gold,
       {points(1-test.diag.table$Specificity[which.max(test.cutoff.table$Accuracy.area)],
          test.diag.table$Sensitivity[which.max(test.cutoff.table$Accuracy.area)],
          col=1,pch=19)
+       title(sub="Cut-off estimated by maximazing the area related to accuracy")  
        legend("bottomright",legend=(c(
          paste("cut off:",formatC(test.cutoff.table$test.values[which.max
             (test.cutoff.table$Accuracy.area)],digits=4)),
@@ -265,6 +269,7 @@ ROC<-function(gold,
       {points(1-test.diag.table$Specificity[which.max(test.cutoff.table$Max.Se.Sp)],
          test.diag.table$Sensitivity[which.max(test.cutoff.table$Max.Se.Sp)],
          col=1,pch=19)
+      title(sub="Cut-off value where the sum Se + Sp is maximized")         
       legend("bottomright",legend=(c(
          paste("cut off:",formatC(test.cutoff.table$test.values[which.max
             (test.cutoff.table$Max.Se.Sp)],digits=4)),
@@ -278,6 +283,7 @@ ROC<-function(gold,
       {points(1-test.diag.table$Specificity[which.max(test.cutoff.table$Youden)],
          test.diag.table$Sensitivity[which.max(test.cutoff.table$Youden)],
          col=1,pch=19)
+       title(sub="Cut-off estimated by maximazing Youden Index")         
        legend("bottomright",legend=(c(
          paste("cut off:",formatC(test.cutoff.table$test.values[which.max
             (test.cutoff.table$Youden)],digits=4)),
@@ -291,6 +297,7 @@ ROC<-function(gold,
       {points(1-test.diag.table$Specificity[which.min(test.cutoff.table$Se.equals.Sp)],
          test.diag.table$Sensitivity[which.min(test.cutoff.table$Se.equals.Sp)],
          col=1,pch=19)
+       title(sub="Cut-off value where Se is the closest to Sp")
        legend("bottomright",legend=(c(
          paste("cut off:",formatC(test.cutoff.table$test.values[which.min
             (test.cutoff.table$Se.equals.SP)],digits=4)),
@@ -304,6 +311,7 @@ ROC<-function(gold,
       {points(1-test.diag.table$Specificity[which.min(test.cutoff.table$MinRocDist)],
          test.diag.table$Sensitivity[which.min(test.cutoff.table$MinRocDist)],
          col=1,pch=19)
+       title(sub="Cut-off that minimizes the distance between the curve and upper left corner")         
        legend("bottomright",legend=(c(
          paste("cut off:",formatC(test.cutoff.table$test.values[which.min
             (test.cutoff.table$MinRocDist)],digits=4)),
@@ -317,6 +325,8 @@ ROC<-function(gold,
       {points(1-test.diag.table$Specificity[which.max(test.cutoff.table$Efficiency)],
          test.diag.table$Sensitivity[which.max(test.cutoff.table$Efficiency)],
          col=1,pch=19)
+       title(sub=paste("Cut-off maximizing efficiency: population prevalence =",
+             formatC(pop.prevalence,digits=2)))         
        legend("bottomright",legend=(c(
          paste("cut off:",formatC(test.cutoff.table$test.values[which.max
             (test.cutoff.table$Efficiency)],digits=4)),
@@ -330,6 +340,9 @@ ROC<-function(gold,
       {points(1-test.diag.table$Specificity[which.min(test.cutoff.table$MCT)],
          test.diag.table$Sensitivity[which.min(test.cutoff.table$MCT)],
          col=1,pch=19)
+       title(sub=paste("Cut-off minimazing MCT: population prevalence =",
+             formatC(pop.prevalence,digits=2),"; cost(FN)/cost(FP)=",
+             formatC(Cost,digits=2)))                  
        legend("bottomright",legend=(c(
          paste("cut off:",formatC(test.cutoff.table$test.values[which.min
             (test.cutoff.table$MCT)],digits=4)),

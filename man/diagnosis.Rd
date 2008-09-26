@@ -1,6 +1,7 @@
 \name{diagnosis}
 \alias{diagnosis}
 \alias{diagnosisI}
+\alias{print.diag}
 \title{Diagnostic test accuracy evaluation}
 \description{
   diagnosis estimate sensitivity, specificity, predictive values, likelihood
@@ -27,7 +28,7 @@ diagnosisI(TP,FN,FP,TN, CL = 0.95, print = TRUE, plot = FALSE)
    between 0 and 1. Default is 0.95.}
 }
 \details{
-In diagnosis, the values entered must be two variables in a dataframe. The
+In diagnosis, the values entered must be two variables in a data frame. The
 first one should be the gold standard and the second should be the index test.
 These two variables must be coded either as numeric - 0 for negative and 1 for a
 positive test - or with the words "positive" and "negative" or "presence" and
@@ -39,8 +40,8 @@ Predictive values and Accuracy confidence limits rely on binomial distribution,
 which does not give result outside [0:1] such as normal distribution or
 asymptotic theory. DOR, Likelihood  ratios and Youden J index confidence limits
 rely on normal approximation (Wald method for likelihoods). The AUC (area under
-the ROC curve) is estimated by DeLong method (trapezoidal or Mann-Witney mehotd)
-and so is its confidence limits. It is known that AUC by this mehtod, for ordinal
+the ROC curve) is estimated by DeLong method (trapezoidal or Mann-Witney method)
+and so is its confidence limits. It is known that AUC by this method, for ordinal
 data, underestimate the true AUC.
 }
 \value{
@@ -53,7 +54,8 @@ data, underestimate the true AUC.
   \item{Specificity}{the probability of the test to correctly classify subjects
         without the target condition (TN/(TN+FP))}
   \item{Predictive values}{the probabilities of being with (positive predictive
-        value) or without (negative predictive value) the target condition given a test result.}
+        value) (TP/(TP+FP)) or without (negative predictive value) the target
+         condition given a test result (TN/(TN+FN)).}
   \item{Likelihood ratios}{the probability of test a result in people with the
        target condition, divided by the probability of the same test result in
        people without the target condition (PLR = Se/(1-Sp); NLR = (1-Sp)/Se)}
@@ -64,7 +66,7 @@ data, underestimate the true AUC.
         there is only one threshold}
   \item{Error rate}{expresses how many errors we make when we diagnose patients
         with an abnormal test result as diseased, and those with a normal test result
-        as non-diseased}
+        as non-diseased ((FP+FN)/sample size).}
   \item{Accuracy}{overall measure that express the capacity of the test to correctly
         classify subjects with and without the target condition ((TP+TN)/(sample size))}
   \item{Area under ROC curve}{overall measure of accuracy - here the method is the
@@ -72,16 +74,15 @@ data, underestimate the true AUC.
         identical results as (Se+SP)/2.}
   }
 \references{
-  \item{1}{Knotterus. The Evidence Based Clinical Diagnosis; BMJBooks, 2002.}
-  \item{2}{Xiou-Hua Zhou, Nancy A Obuchowsky, Donna McClish. Statistical Mehods
-           in diagnostic Medicine; Wiley, 2002.}
-  \item{3}{Simel D, Samsa G, Matchar D (1991). Likelihood ratios with confidence:
-          Sample size estimation for diagnostic test studies. Journal of Clinical
-          Epidemiology 44: 763 - 770}
+
+Knotterus. The Evidence Based Clinical Diagnosis; BMJBooks, 2002.
+
+Xiou-Hua Zhou, Nancy A Obuchowsky, Donna McClish. Statistical Mehods in diagnostic Medicine; Wiley, 2002.
+
+Simel D, Samsa G, Matchar D (1991). Likelihood ratios with confidence: Sample size estimation for diagnostic test studies. Journal of Clinical Epidemiology 44: 763 - 770
 }
 \author{Pedro Brasil - \email{pedro.brasil@ipec.fiocruz.br}}
-\note{Bug reports, malfunctioning, or suggestions for further improvements can
- be sent, preferentially, through the epidemiologic R list.
+\note{Bug reports, malfunctioning, or suggestions for further improvements or contributions can be sent, preferentially, through the DiagnosisMed R-Forge website \url{https://r-forge.r-project.org/projects/diagnosismed/}.
 }
 \seealso{\code{\link{plot.diag}}, \link[epicalc]{ROC}, \link[epitools]{binom.conf.int},
  \link[epibasix]{sensSpec},\link[epiR]{epi.tests}}
@@ -95,25 +96,25 @@ Freq<-as.numeric(c(173,13,27,638))
 mydata<-as.data.frame(cbind(mydata,Freq))
 # Naming the columns of the data set
 colnames(mydata)<-c("Gold","mytest","Freq")
-# A little discription of the data set to check if it is ok!
+# A little description of the data set to check if it is ok!
 str(mydata)
 # Removing unwanted objects
 rm(Freq)
-# Exapanding the four lines dataset to an adequate format
+# Expanding the four lines dataset to an adequate format
 mydata<-expand(mydata, index.var = "Freq")
 # Attaching the data set
 attach(mydata)
-# Runing the diagnosis analysis
+# Running the diagnosis analysis
 test<-diagnosis(Gold,mytest,print=FALSE)
 print(test)
-# the same as
+# The same as
 diagnosis(Gold,mytest)
-# draw a nomogram from this test
+# Draw a nomogram from this test
 test<-diagnosis(Gold,mytest,print=FALSE)
 plot(test)
-#different from - draw a ROC curve from this test
+#Different from - draw a ROC curve from this test
 diagnosis(Gold,mytest,plot=TRUE,print=FALSE)
-#inserting values from a 2x2 table
+#Inserting values from a 2x2 table
 diagnosisI(364,22,17,211)
 }
 \keyword{univar}
