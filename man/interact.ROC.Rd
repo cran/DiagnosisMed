@@ -21,16 +21,18 @@ interact.ROC is a call from roc.demo{TeachingDemo}. The difference is that
  interact.ROC allow the input data be displayed as usually is in diagnostic
  studies, a column with the test result and the other with the reference standard
  results. Inside this function the "ask" option - which
- controls the "next" button to see the next graph - is turned off. To turn it on
- again later, type options(ask=TRUE). The test must have a rationale that higher values
- of the index test belong to those with the target disease and those with lower
- values belong to those without the target disease. If this is not the case, the
- suggestion is to transform the tests results by multiplying it by -1 before
- running interact.ROC.
+ controls the "next" button to see the next graph - is turned off - par(ask=FALSE).
+ Also other options must be set to this function to work fine. Type "options()".
+ The option ask and device.ask.default should be set as FALSE, as they usually
+ are by default. To turn it on again later, type par(ask=TRUE). The test must have
+ a rationale that higher values of the index test belong to those with the target
+ disease and those with lower values belong to those without the target disease.
+ If this is not the case, the suggestion is to transform the tests results by
+ multiplying it by -1 before running interact.ROC.
 }
 \value{
 A ROC graph with a sliding button to interact and see the Sensitivity and
-Specificity changes.
+Specificity changes while changing the cut-off.
 }
 \references{
 
